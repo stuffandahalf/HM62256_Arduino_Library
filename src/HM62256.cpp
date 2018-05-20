@@ -9,16 +9,16 @@ HM62256::HM62256(byte *address_bus_pins, byte *data_bus_pins, byte read_pin, byt
     this->setMode(HM62256_NOOUT);
     
     this->data_bus = new byte[HM62256_DATA_WIDTH];
-    this->memory_bus = new byte[HM62256_MEMORY_WIDTH];
+    this->address_bus = new byte[HM62256_ADDRESS_WIDTH];
     this->memory_size = 0;
     
     for (int i = 0; i < HM62256_DATA_WIDTH; i++) {
         this->data_bus[i] = data_bus_pins[i];
     }
     
-    for (int i = 0; i < HM62256_MEMORY_WIDTH; i++) {
-        this->memory_bus[i] = address_bus_pins[i];
-        pinMode(this->memory_bus[i], OUTPUT);
+    for (int i = 0; i < HM62256_ADDRESS_WIDTH; i++) {
+        this->address_bus[i] = address_bus_pins[i];
+        pinMode(this->address_bus[i], OUTPUT);
     }
     
     //this->detect();
@@ -97,8 +97,8 @@ void HM62256::setDataBusMode(byte mode) {
 }
 
 void HM62256::setAddress(address addr) {
-    for (int i = 0; i < HM62256_MEMORY_WIDTH; i++) {
-        digitalWrite(this->memory_bus[i], addr & 1);
+    for (int i = 0; i < HM62256_ADDRESS_WIDTH; i++) {
+        digitalWrite(this->address_bus[i], addr & 1);
         addr >>= 1;
     }
 }
@@ -124,5 +124,5 @@ address HM62256::size() {
 
 HM62256::~HM62256() {
     delete(this->data_bus);
-    delete(this->memory_bus);
+    delete(this->address_bus);
 }

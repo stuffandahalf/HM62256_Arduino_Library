@@ -8,7 +8,7 @@
 
 #include <Arduino.h>
 
-#define HM62256_MEMORY_WIDTH 16
+#define HM62256_ADDRESS_WIDTH 16
 //#define MEMORY_PIN 23
 
 #define HM62256_DATA_WIDTH 8
@@ -31,7 +31,7 @@ class HM62256 {
         byte write_pin;
 
         byte *data_bus;
-        byte *memory_bus;
+        byte *address_bus;
         uint16_t memory_size;
         
         void setDataBusMode(byte mode);
