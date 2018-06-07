@@ -5,24 +5,29 @@ HM62256::HM62256(byte *address_bus_pins, byte *data_bus_pins, byte read_pin, byt
     this->write_pin = write_pin;
     pinMode(this->read_pin, OUTPUT);
     pinMode(this->write_pin, OUTPUT);
-    
+
     this->setMode(HM62256_NOOUT);
-    
+
     this->data_bus = new byte[HM62256_DATA_WIDTH];
     this->address_bus = new byte[HM62256_ADDRESS_WIDTH];
-    this->memory_size = 0;
-    
+    //this->memory_size = 0;
+
     for (int i = 0; i < HM62256_DATA_WIDTH; i++) {
         this->data_bus[i] = data_bus_pins[i];
     }
-    
+
     for (int i = 0; i < HM62256_ADDRESS_WIDTH; i++) {
         this->address_bus[i] = address_bus_pins[i];
         pinMode(this->address_bus[i], OUTPUT);
     }
-    
+
     //this->detect();
     this->memory_size = HM62256_MEMORY_SIZE;
+}
+
+HM62256::~HM62256() {
+    delete(this->data_bus);
+    delete(this->address_bus);
 }
 
 byte HM62256::get(address addr) {
@@ -30,16 +35,16 @@ byte HM62256::get(address addr) {
     this->setAddress(addr);
     this->setMode(HM62256_READ);
     byte data = 0;
-    
+
     for (int i = HM62256_DATA_WIDTH - 1; i >= 0; i--) {
         data += digitalRead(this->data_bus[i]);
         if (i) {
             data <<= 1;
         }
     }
-    
+
     this->setMode(HM62256_NOOUT);
-    
+
     return data;
 }
 
@@ -47,16 +52,16 @@ void HM62256::set(address addr, byte data) {
     this->setDataBusMode(OUTPUT);
     this->setAddress(addr);
     this->setMode(HM62256_WRITE);
-    
+
     for (int i = 0; i < HM62256_DATA_WIDTH; i++) {
         digitalWrite(this->data_bus[i], data & 1);
         data >>= 1;
     }
-    
+
     this->setMode(HM62256_NOOUT);
 }
 
-void HM62256::detect() {
+/*void HM62256::detect() {
     Serial.println("Detecting available RAM");
     bool complete = false;
     while (!complete && (this->memory_size < UINT16_MAX)) {
@@ -75,15 +80,15 @@ void HM62256::detect() {
             this->memory_size++;
         }
     }
-    
+
     Serial.print("Detected ");
     Serial.print(this->memory_size);
     Serial.println(" bytes");
-}
+}*/
 
 void HM62256::clear() {
     Serial.println("Memory will be cleared");
-    for(address i = 0; i < this->memory_size; i++) {
+    for(address i = 0; i < HM62256_MEMORY_SIZE; i++) {
         //Serial.println(i, HEX);
         this->set(i, 0);
     }
@@ -116,13 +121,4 @@ void HM62256::setMode(byte mode) {
         digitalWrite(this->read_pin, HIGH);
         digitalWrite(this->write_pin, HIGH);
     }
-}
-
-address HM62256::size() {
-    return this->memory_size;
-}
-
-HM62256::~HM62256() {
-    delete(this->data_bus);
-    delete(this->address_bus);
 }
