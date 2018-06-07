@@ -22,7 +22,7 @@ HM62256::HM62256(byte *address_bus_pins, byte *data_bus_pins, byte read_pin, byt
     }
 
     //this->detect();
-    this->memory_size = HM62256_MEMORY_SIZE;
+    //this->memory_size = HM62256_MEMORY_SIZE;
 }
 
 HM62256::~HM62256() {
@@ -31,9 +31,10 @@ HM62256::~HM62256() {
 }
 
 byte HM62256::get(address addr) {
-    this->setDataBusMode(INPUT_PULLUP);
-    this->setAddress(addr);
     this->setMode(HM62256_READ);
+    //this->setDataBusMode(INPUT_PULLUP);
+    //this->setDataBusMode(INPUT);
+    this->setAddress(addr);
     byte data = 0;
 
     for (int i = HM62256_DATA_WIDTH - 1; i >= 0; i--) {
@@ -49,9 +50,9 @@ byte HM62256::get(address addr) {
 }
 
 void HM62256::set(address addr, byte data) {
-    this->setDataBusMode(OUTPUT);
-    this->setAddress(addr);
     this->setMode(HM62256_WRITE);
+    //this->setDataBusMode(OUTPUT);
+    this->setAddress(addr);
 
     for (int i = 0; i < HM62256_DATA_WIDTH; i++) {
         digitalWrite(this->data_bus[i], data & 1);
@@ -101,6 +102,12 @@ void HM62256::setDataBusMode(byte mode) {
     }
 }
 
+void HM62256::setAddressBusMode(byte mode) {
+    for (int i = 0; i < HM62256_ADDRESS_WIDTH; i++) {
+        pinMode(this->address_bus[i], mode);
+    }
+}
+
 void HM62256::setAddress(address addr) {
     for (int i = 0; i < HM62256_ADDRESS_WIDTH; i++) {
         digitalWrite(this->address_bus[i], addr & 1);
@@ -110,14 +117,20 @@ void HM62256::setAddress(address addr) {
 
 void HM62256::setMode(byte mode) {
     if (mode == HM62256_READ) {
+        setAddressBusMode(OUTPUT);
+        setDataBusMode(INPUT);
         digitalWrite(this->read_pin, LOW);
         digitalWrite(this->write_pin, HIGH);
     }
     else if (mode == HM62256_WRITE) {
+        setAddressBusMode(OUTPUT);
+        setDataBusMode(OUTPUT);
         digitalWrite(this->read_pin, HIGH);
         digitalWrite(this->write_pin, LOW);
     }
     else if (mode == HM62256_NOOUT) {
+        setAddressBusMode(INPUT_PULLUP);
+        setDataBusMode(INPUT_PULLUP);
         digitalWrite(this->read_pin, HIGH);
         digitalWrite(this->write_pin, HIGH);
     }

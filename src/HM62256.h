@@ -29,6 +29,7 @@ class HM62256 {
         //uint16_t memory_size;
 
         void setDataBusMode(byte mode);
+        void setAddressBusMode(byte mode);
         void setAddress(address addr);
         void setMode(byte mode);
         //void detect();
