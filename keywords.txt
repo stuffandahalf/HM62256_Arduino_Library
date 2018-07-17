@@ -7,19 +7,19 @@
 #######################################
 
 HM62256	KEYWORD1
-address KEYWORD1
+address	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-get	    KEYWORD2
-set 	KEYWORD2
+get	KEYWORD2
+set	KEYWORD2
 clear	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
-HM62256_MEMORY_WIDTH    LITERAL1
-HM62256_DATA_WIDTH      LITERAL1
-HM62245_MEMORY_SIZE     LITERAL1
+HM62256_MEMORY_WIDTH	LITERAL1
+HM62256_DATA_WIDTH	LITERAL1
+HM62245_MEMORY_SIZE	LITERAL1
