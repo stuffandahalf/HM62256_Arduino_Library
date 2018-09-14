@@ -11,7 +11,6 @@ private:
 public:
     Bus(byte pins[sizeof(T) * 8]) {
         for (int i = 0; i < sizeof(T) * 8; i++) {
-            //Serial.println(pins[i]);
             this->pins[i] = pins[i];
         }
         this->set_mode(INPUT_PULLUP);
@@ -24,7 +23,6 @@ public:
     }
     
     void set(T data) {
-        //this->set_mode(OUTPUT);
         for (int i = 0; i < sizeof(T) * 8; i++) {
             pinMode(this->pins[i], OUTPUT);
             digitalWrite(pins[i], data & 1);
